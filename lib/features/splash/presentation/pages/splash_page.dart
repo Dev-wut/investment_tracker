@@ -4,22 +4,25 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/config/route_config.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../authentication/presentation/blocs/auth/auth_bloc.dart';
+import '../../../authentication/presentation/blocs/google_auth/google_auth_bloc.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          context.go(AppRoutes.dashboard.path);
-        } else if (state is AuthUnauthenticated) {
+    return BlocListener<GoogleAuthBloc, GoogleAuthState>(
+      listener: (context, state) async {
+        final AuthStatus status = state.status;
+        if (status == AuthStatus.authenticated) {
+          await Future.delayed(Duration(seconds: 3));
+          if(context.mounted)context.go(AppRoutes.dashboard.path);
+        } else if (status == AuthStatus.unauthenticated) {
           context.go(AppRoutes.loginPage.path);
-        } else if (state is AuthErrorState) {
+        } else if (status == AuthStatus.failure) {
+          final msg = state.error ?? 'Authentication failed';
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+            SnackBar(content: Text(msg)),
           );
           context.go(AppRoutes.loginPage.path);
         }

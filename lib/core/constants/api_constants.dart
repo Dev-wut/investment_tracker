@@ -1,6 +1,7 @@
 class ApiConstants {
   // Base URLs
   static const String baseUrl = 'https://api.coingecko.com/api/v3';
+  static const String appScriptBaseUrl = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
 
   // Endpoints
   static const String coins = '/coins';

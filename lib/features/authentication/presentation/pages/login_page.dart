@@ -1,10 +1,12 @@
 // login_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/config/route_config.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../blocs/login/login_bloc.dart';
+import '../blocs/google_auth/google_auth_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -56,39 +58,40 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginBloc(),
-      child: Scaffold(
-        body: Container(
-          decoration: AppTheme.loginBackgroundDecoration,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: BlocConsumer<LoginBloc, LoginState>(
-                listener: (context, state) {
-                  if (state is LoginSuccess) {
-                    _showSuccessMessage(context, state.user.displayName);
-                  } else if (state is LoginFailure) {
-                    _showErrorMessage(context, state.error);
-                  }
-                },
-                builder: (context, state) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildLogo(),
-                      const SizedBox(height: 40),
-                      _buildWelcomeText(),
-                      const SizedBox(height: 16),
-                      _buildSubtitle(),
-                      const SizedBox(height: 60),
-                      _buildLoginCard(context, state),
-                      const SizedBox(height: 40),
-                      _buildTermsText(),
-                    ],
-                  );
-                },
-              ),
+    return  Scaffold(
+      body: Container(
+        decoration: AppTheme.loginBackgroundDecoration,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: BlocConsumer<GoogleAuthBloc, GoogleAuthState>(
+              listener: (context, state) {
+                final AuthStatus status = state.status;
+                if (status == AuthStatus.authenticated) {
+                  final user = state.user;
+                  _showSuccessMessage(context, "${user?.name}");
+                  context.replaceNamed(AppRoutes.dashboard.name);
+                } else if (status == AuthStatus.failure) {
+                  final msg = state.error ?? 'Authentication failed';
+                  _showErrorMessage(context, msg);
+                }
+              },
+              builder: (context, state) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildLogo(),
+                    const SizedBox(height: 40),
+                    _buildWelcomeText(),
+                    const SizedBox(height: 16),
+                    _buildSubtitle(),
+                    const SizedBox(height: 60),
+                    _buildLoginCard(context, state),
+                    const SizedBox(height: 40),
+                    _buildTermsText(),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -145,7 +148,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildLoginCard(BuildContext context, LoginState state) {
+  Widget _buildLoginCard(BuildContext context, GoogleAuthState state) {
     return SlideTransition(
       position: _slideAnimation,
       child: FadeTransition(
@@ -166,8 +169,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
-  Widget _buildGoogleSignInButton(BuildContext context, LoginState state) {
-    final isLoading = state is LoginLoading;
+  Widget _buildGoogleSignInButton(BuildContext context, GoogleAuthState state) {
+    final isLoading = state.status == AuthStatus.loading;
 
     return SizedBox(
       width: double.infinity,
@@ -175,7 +178,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       child: ElevatedButton(
         onPressed: isLoading
             ? null
-            : () => context.read<LoginBloc>().add(GoogleSignInRequested()),
+            : () => context.read<GoogleAuthBloc>().add(GoogleAuthSignInRequested()),
         child: isLoading
             ? const SizedBox(
           width: 20,
