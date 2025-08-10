@@ -381,5 +381,3 @@ class UserRepo {
 ```
 
 ---
-
-> ถ้าต้องการไฟล์ตัวอย่างโค้ดเต็มๆ ของ `LoggingInterceptor`, `ErrorInterceptor`, `ErrorHandler`, `ApiResult` ในโปรเจ็กต์จริง แจ้งได้ครับ ผมจะแพ็กเป็นโฟลเดอร์พร้อมใช้งานให้ทันที
