@@ -181,16 +181,7 @@ class ErrorInterceptor extends Interceptor {
           );
 
     // แนวทางที่ 1: คงเป็น error ต่อไป (ให้ชั้นบนจับ)
-    handler.next(
-      DioException(
-        requestOptions: err.requestOptions,
-        response: shaped,
-        type: err.type,
-        error: err.error,
-        message: err.message,
-        stackTrace: err.stackTrace,
-      ),
-    );
+    handler.next(err.copyWith(response: shaped));
 
     // แนวทางที่ 2: เปลี่ยนเป็น success (อยาก handle ในชั้น response)
     // handler.resolve(shaped);
