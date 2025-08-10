@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/config/route_config.dart';
 import 'core/constants/api_constants.dart';
 import 'core/constants/app_constants.dart';
-import 'core/net/app_script_api_client.dart';
+import 'core/services/networks/app_script_api_client.dart';
 import 'core/theme/app_theme.dart';
 import 'features/authentication/domain/repositories/auth_persistence.dart';
 import 'features/authentication/domain/repositories/google_auth_repository.dart';

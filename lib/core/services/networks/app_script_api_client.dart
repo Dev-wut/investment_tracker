@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../../features/authentication/domain/models/google_scopes.dart';
-import '../../features/authentication/domain/repositories/google_auth_repository.dart';
+import '../../../features/authentication/domain/models/google_scopes.dart';
+import '../../../features/authentication/domain/repositories/google_auth_repository.dart';
 
 class AppScriptApiClient {
   final GoogleAuthRepository _authRepo;
