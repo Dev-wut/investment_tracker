@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/authentication/presentation/pages/login_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
+import '../../features/navigation/presentation/pages/main_screen.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 
 enum AppRoutes {
@@ -24,7 +25,7 @@ final class RouteConfig {
       GoRoute(
         name: AppRoutes.initial.name,
         path: AppRoutes.initial.path,
-        builder: (context, state) => const SplashPage(),
+        builder: (context, state) => const MainScreen(),
       ),
       GoRoute(
         name: AppRoutes.loginPage.name,

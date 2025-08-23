@@ -15,7 +15,6 @@ class SplashPage extends StatelessWidget {
       listener: (context, state) async {
         final AuthStatus status = state.status;
         if (status == AuthStatus.authenticated) {
-          await Future.delayed(Duration(seconds: 3));
           if(context.mounted)context.go(AppRoutes.dashboard.path);
         } else if (status == AuthStatus.unauthenticated) {
           context.go(AppRoutes.loginPage.path);
